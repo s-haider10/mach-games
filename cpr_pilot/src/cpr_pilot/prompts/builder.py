@@ -58,9 +58,8 @@ def captain_system_prompt(
     if prompt.include_breakeven_framing:
         parts.append(
             f"Across the full {T}-season run, you need to land at least "
-            f"{int(breakeven_total)} tonnes total to cover boat payments, crew wages, "
-            f"and fuel. Below that, you've lost money on the boat. Some seasons will be "
-            f"better than others — what matters is the total."
+            f"{int(breakeven_total)} tonnes total to cover permit fees only. Crew wages, "
+            f", fuel, personal wealth is based on profit above that. Below that, you've lost money."
         )
 
     if prompt.include_sonar_block and has_sonar:
@@ -73,8 +72,8 @@ def captain_system_prompt(
     if prompt.include_closure_block:
         if closure_known:
             parts.append(
-                f"The cooperative arrangement and the regulator have set a closure: after "
-                f"season {T} the southern zone shuts down for an extended recovery period. "
+                f"The coastal guard have set a closure: after "
+                f"season {T} the southern zone shuts down forever. "
                 f"You and the others all know this from the start of the year."
             )
         else:
@@ -83,7 +82,7 @@ def captain_system_prompt(
     actions_line = _action_list(comms, comms.public_intent_disclosure)
     parts.append(
         f"During the pre-season radio call you can: {actions_line}. "
-        f"Speak naturally; this is a working radio call between captains."
+        f"this is a working radio call between captains."
     )
 
     if comms.require_think_field:

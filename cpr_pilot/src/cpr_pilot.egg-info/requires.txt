@@ -1,0 +1,11 @@
+pydantic>=2.6
+pyyaml>=6.0
+tiktoken>=0.6
+openai>=1.50
+anthropic>=0.39
+google-genai>=0.3
+
+[dev]
+pytest>=7
+pytest-cov>=4
+ruff>=0.4

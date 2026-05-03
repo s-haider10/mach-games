@@ -21,6 +21,12 @@ from ..utils import jsonl_append, new_decision_id
 from .routing import deliver_intent, deliver_open_channel, deliver_private
 
 
+FISHING_CLOSED_ADVISORY = (
+    "Coast Guard advisory: fishing is closed because the pre-season biomass is 0 t. "
+    "No boats may fish this round."
+)
+
+
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -159,6 +165,8 @@ def run_game(
     transcript_path = str(run_dir / "transcript.jsonl")
     state_path = str(run_dir / "state.jsonl")
     decisions_path = str(run_dir / "decisions.jsonl")
+    for artifact_path in (transcript_path, state_path, decisions_path):
+        Path(artifact_path).touch()
 
     state = GameState(
         variant=variant, seed=seed, insider_id=insider.name, S=cfg.dynamics.S0,
@@ -185,6 +193,35 @@ def run_game(
 
     for t in range(1, cfg.dynamics.T + 1):
         state.t = t
+        S_pre = state.S
+
+        if S_pre <= 0:
+            for cap in captain_objs:
+                cap.reset_for_season()
+                cap.append_user(f"[official advisory, all channels] {FISHING_CLOSED_ADVISORY}")
+
+            harvests = {c.name: 0 for c in captain_objs}
+            jsonl_append(state_path, {
+                "kind": "phase", "phase": "fishing_closed",
+                "season": t, "variant": variant,
+                "S_pre": S_pre,
+                "advisory": FISHING_CLOSED_ADVISORY,
+                "ts_iso": _now_iso(),
+            })
+            jsonl_append(state.state_path, {
+                "kind": "season", "season": t, "variant": variant,
+                "S_pre": S_pre, "harvests": harvests,
+                "cumulative_catch": dict(state.cumulative_catch),
+                "effective_harvests": {c.name: 0.0 for c in captain_objs},
+                "total_harvest": 0.0, "S_post": S_pre,
+                "signal_delivered": False, "signal_value": None,
+                "insider_id": insider.name, "actions": [],
+                "closed": True, "closure_reason": "zero_biomass",
+                "advisory": FISHING_CLOSED_ADVISORY,
+                "ts_iso": _now_iso(),
+            })
+            print(f"  s{t:>2}: S_pre={S_pre:5.1f}  Coast Guard closed fishing; round ended.")
+            break
 
         # Phase: signal
         signal_delivered = rng.random() < cfg.dynamics.p_info

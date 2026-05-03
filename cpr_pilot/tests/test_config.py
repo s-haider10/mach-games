@@ -36,6 +36,13 @@ def test_refugia_validation():
         Config.model_validate(base)
 
 
+def test_zero_refugia_allowed_for_collapse():
+    base = _base()
+    base["dynamics"] = {"K": 10, "S_refugia": 0, "S0": 0}
+    cfg = Config.model_validate(base)
+    assert cfg.dynamics.S_refugia == 0
+
+
 def test_T_announce_within_T():
     base = _base()
     base["dynamics"] = {"T": 5, "T_announce": 10}

@@ -1,0 +1,2 @@
+[console_scripts]
+cpr-pilot = cpr_pilot.cli:main

@@ -53,7 +53,7 @@ class DynamicsConfig(BaseModel):
     K: float = 80.0
     r: float = 0.25
     S0: float = 80.0
-    S_refugia: float = 8.0
+    S_refugia: float = 1
     h_max: int = 20
     p_info: float = 0.6           # P(insider receives sonar reading per season)
     T: int = 10
@@ -169,8 +169,8 @@ class Config(BaseModel):
         names = [c.name for c in self.captains]
         if len(set(names)) != len(names):
             raise ValueError(f"Duplicate captain names: {names}")
-        if self.dynamics.S_refugia <= 0:
-            raise ValueError("S_refugia must be > 0")
+        if self.dynamics.S_refugia < 0:
+            raise ValueError("S_refugia must be >= 0")
         if self.dynamics.S_refugia >= self.dynamics.K:
             raise ValueError("S_refugia must be < K")
         if self.dynamics.T_announce > self.dynamics.T:
