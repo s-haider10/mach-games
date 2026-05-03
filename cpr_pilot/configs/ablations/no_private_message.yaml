@@ -1,0 +1,6 @@
+captains:
+  - {name: Alvarez,  boat: Mistral,    port: Port Vigo, breakeven_total: 60}
+  - {name: Santiago, boat: Sea Hawk,   port: Port Vigo, breakeven_total: 80}
+  - {name: Carlos,   boat: Dawnchaser, port: Port Vigo, breakeven_total: 60}
+comms:
+  allow_private_message: false

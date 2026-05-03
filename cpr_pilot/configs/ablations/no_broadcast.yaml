@@ -1,0 +1,8 @@
+# Inherits default.yaml semantics; only deltas listed.
+# Use: cpr-pilot run --config configs/default.yaml --override-config configs/ablations/no_broadcast.yaml
+captains:
+  - {name: Alvarez,  boat: Mistral,    port: Port Vigo, breakeven_total: 60}
+  - {name: Santiago, boat: Sea Hawk,   port: Port Vigo, breakeven_total: 80}
+  - {name: Carlos,   boat: Dawnchaser, port: Port Vigo, breakeven_total: 60}
+comms:
+  allow_broadcast: false

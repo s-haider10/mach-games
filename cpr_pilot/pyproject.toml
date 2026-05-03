@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cpr-pilot"
+version = "0.2.0"
+description = "Common-pool resource game for studying Machiavellian behavior in LLMs"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "tiktoken>=0.6",
+    "openai>=1.50",
+    "anthropic>=0.39",
+    "google-genai>=0.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4"]
+
+[project.scripts]
+cpr-pilot = "cpr_pilot.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
